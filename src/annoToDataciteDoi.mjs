@@ -53,10 +53,6 @@ const EX = {
         resourceType: 'Annotation',
         resourceTypeGeneral: 'Other',
       },
-      formats: [
-        'text/html',
-        // 'application/ld+json;profile="http://www.w3.org/ns/anno.jsonld"',
-      ],
     };
 
     (function altIds() {
