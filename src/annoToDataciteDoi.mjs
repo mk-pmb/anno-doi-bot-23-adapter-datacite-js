@@ -23,6 +23,9 @@ const EX = {
     const input = await readRelaxedJsonFromStdin();
     mustBe('pos num', 'Number of input records')(input.length);
     const anno = mustBe('obj', 'Input record #1 (the annotation)')(input[0]);
+    if (input.length > 1) {
+      throw new Error('Unexpectad additional input records.');
+    }
     const cfg = {
       doiPrefix: mustEnv.nest('cfg_doi_prefix'),
       initialVersionDate: mustEnv('str | undef', 'anno_initial_version_date'),
