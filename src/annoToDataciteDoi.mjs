@@ -27,7 +27,7 @@ const EX = {
       throw new Error('Unexpectad additional input records.');
     }
     const cfg = {
-      doiPrefix: mustEnv.nest('cfg_doi_prefix'),
+      expectedDoi: mustEnv.nest('anno_doi_expect'),
       initialVersionDate: mustEnv('str | undef', 'anno_initial_version_date'),
     };
     console.log(JSON.stringify(EX.convert(cfg, anno), null, 2));
@@ -37,7 +37,7 @@ const EX = {
   convert(cfg, anno) {
     const popAnno = objPop(anno, { mustBe }).mustBe;
     const annoIdUrl = popAnno.nest('id');
-    const { baseId, versNum } = EX.parseVersId(annoIdUrl);
+    const { versNum } = EX.parseVersId(annoIdUrl);
     const prevReviUrl = popAnno('nonEmpty str | undef', 'dc:replaces');
     const hasPreviousVersion = Boolean(prevReviUrl);
 
@@ -50,7 +50,7 @@ const EX = {
       schemaVersion: 'http://datacite.org/schema/kernel-4.4',
       url: annoIdUrl,
       version: versNum,
-      doi: cfg.doiPrefix + baseId + '_' + versNum,
+      doi: cfg.expectedDoi,
       ...fmtDateAttrs(popAnno, { ...cfg, hasPreviousVersion }),
       types: {
         resourceType: 'Annotation',
