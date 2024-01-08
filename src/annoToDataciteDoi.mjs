@@ -74,7 +74,9 @@ const EX = {
       textBodyLanguages,
     } = parseBodies(popAnno);
     const firstBodyLanguage = (textBodyLanguages[0] || null);
-    attr.language = firstBodyLanguage;
+    attr.language = (popAnno('undef | str', 'dc:language')
+      || firstBodyLanguage
+      || ':unav');  // DataCite: "value unavailable, possibly unknown"
 
     attr.subjects = [
       ...gndSubjects,
