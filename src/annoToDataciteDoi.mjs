@@ -7,11 +7,11 @@ import arrayOfTruths from 'array-of-truths';
 import guessSubjectTargets from 'webanno-guess-subject-target-url-pmb';
 import mustBe from 'typechecks-pmb/must-be.js';
 import objPop from 'objpop';
-import readRelaxedJsonFromStdin from 'read-relaxed-json-from-stdin-pmb';
 
 import fmtDateAttrs from './fmtDateAttrs.mjs';
 import kisi from './kisi.mjs';
 import parseBodies from './parseBodies.mjs';
+import readOneStdinRecord from './readOneStdinRecord.mjs';
 import rightsListDb from './rightsListDb.mjs';
 import transformAuthor from './transformAuthor.mjs';
 
@@ -19,13 +19,8 @@ import transformAuthor from './transformAuthor.mjs';
 const EX = {
 
   async nodemjsCliMain() {
+    const anno = await readOneStdinRecord();
     const mustEnv = mustBe.tProp('env var ', process.env);
-    const input = await readRelaxedJsonFromStdin();
-    mustBe('pos num', 'Number of input records')(input.length);
-    const anno = mustBe('obj', 'Input record #1 (the annotation)')(input[0]);
-    if (input.length > 1) {
-      throw new Error('Unexpectad additional input records.');
-    }
     const cfg = {
       expectedDoi: mustEnv.nest('anno_doi_expect'),
       initialVersionDate: mustEnv('str | undef', 'anno_initial_version_date'),
