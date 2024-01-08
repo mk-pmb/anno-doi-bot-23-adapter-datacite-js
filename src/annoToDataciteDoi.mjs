@@ -72,6 +72,7 @@ const EX = {
     const {
       gndSubjects,
       textBodyLanguages,
+      relationLinks,
     } = parseBodies(popAnno);
     const firstBodyLanguage = (textBodyLanguages[0] || null);
     attr.language = (popAnno('undef | str', 'dc:language')
@@ -82,7 +83,7 @@ const EX = {
       ...gndSubjects,
     ];
 
-    attr.relatedIdentifier = subjectTargets.map(st => ({
+    const subjRelations = subjectTargets.map(st => ({
       resourceTypeGeneral: 'Text',
       // ^- Currently, all our annotations are texts.
       relationType: 'Reviews',
@@ -91,6 +92,11 @@ const EX = {
       relatedIdentifierType: 'URL',
       relatedIdentifier: (st.scope || st.source || st.id || st),
     }));
+
+    attr.relatedIdentifier = [
+      ...subjRelations,
+      ...relationLinks,
+    ];
 
     attr.titles = [
       { title: popAnno.nest('dc:title'), lang: firstBodyLanguage },

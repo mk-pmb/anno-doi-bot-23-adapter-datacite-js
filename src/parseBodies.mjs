@@ -11,11 +11,14 @@ import kisi from './kisi.mjs';
 
 function fail(why, ass) { throw Object.assign(new Error(why), ass); }
 
+const ignoreValues = Boolean; // cheap built-in no-op
+
 
 const EX = function parseAllBodies(popAnno) {
   const state = {
     report: {
       gndSubjects: [],
+      relationLinks: [],
       textBodyLanguages: [],
     },
   };
@@ -79,8 +82,17 @@ Object.assign(EX, {
       parse(ctx);
     },
 
-    tSpecificResource_plinking() {
-      // In case of UBHD, this is most likely a semantic tag => ignore.
+    tSpecificResource_plinking(state, popBody) {
+      const predicate = popBody.nest('rdf:predicate');
+      const title = popBody.nest('dc:title');
+      const rela = {
+        resourceTypeGeneral: 'Text',
+        relationType: 'References',
+        relatedIdentifierType: 'URL',
+        relatedIdentifier: popBody.nest('source'),
+      };
+      state.report.relationLinks.push(rela);
+      ignoreValues(predicate, title);
     },
 
   },
